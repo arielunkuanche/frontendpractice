@@ -1,20 +1,32 @@
 import { useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-material.css";
 
 function ToDoListApp(){
     const [todo, setTodo]=useState({
         description:'',
+        priority:'',
         date:''
     });
 
     const[todos, setTodos]=useState([]);
 
+    const[colDefs, setColDefs] = useState([
+        { field: 'description', sortable: true, filter: true},
+        { field: 'priority', sortable: true,  filter: true,
+            cellStyle: params => params.value === 'High'? {color: 'Red'}: {color:'Black'}},
+        { field: 'date', sortable: true,  filter: true}
+    ]);
+
     const handleClick = ()=>{
-        if (todo.description === ''&& todo.date === '')
+        if (todo.description === ''&& todo.date === '' && todo.priority ==='')
             alert('Please input todo description and date first!')
         else
             setTodos([...todos, todo])
             setTodo({
                 description:'',
+                priority:'',
                 date:''
             });
         
@@ -34,10 +46,21 @@ function ToDoListApp(){
                 <label>Description:
                     <input value={todo.description} onChange={e => setTodo({...todo, description:e.target.value})} />
                 </label>
+
+                <label>Priority:
+                    <input value={todo.priority} onChange={e => setTodo({...todo, priority:e.target.value})} />
+                </label>
+
                 <label>Date:
-                    <input value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} />
+                    <input type='date' value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} />
                 </label>
                 <button onClick={handleClick}>Add</button>
+            </div>
+            <div className="ag-theme-material" style={{ height: 600, width: 650 }}>
+                <AgGridReact 
+                    rowData={todos}
+                    columnDefs={colDefs}
+                />
             </div>
         </div>
 
@@ -58,4 +81,4 @@ function ToDoListApp(){
     )
 }
 
-export default ToDoListApp
+export default ToDoListApp;

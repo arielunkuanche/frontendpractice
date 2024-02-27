@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import TodoTable from './TodoTable';
 
-function ToDoListApp(){
+function ToDoListWithDelete(){
     const [todo, setTodo]=useState({
         description:'',
         date:''
@@ -23,6 +24,8 @@ function ToDoListApp(){
     const handleDelete = (index)=>{
         const updateTodoList = todos.filter((todo, i) => i!== index);
         setTodos(updateTodoList);
+
+        //setTodos(todos.filter((todo, i)=> i!= index)); - is more simple and neat//
     }
 
     return (
@@ -45,25 +48,10 @@ function ToDoListApp(){
                 <button onClick={handleClick}>Add</button>
             </div>
         </div>
+        <TodoTable todos={todos} handleDelete={handleDelete}/>
 
-        {todos.length>0? (
-            <table>
-                <tbody>
-                    <tr><th>Date</th><th>Description</th></tr>
-                    {todos.map((todo, index) =>
-                        <tr key={index}>
-                            <td>{todo.date}</td>
-                            <td>{todo.description}</td>
-                            <td>
-                            <button onClick={()=>handleDelete(index)}>Delete</button>
-                            </td>
-                        </tr>
-                        
-                    )}
-                </tbody>
-            </table>): null}
         </>
-    )
-}
+        )
+    }
 
-export default ToDoListApp
+export default ToDoListWithDelete;
