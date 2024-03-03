@@ -2,12 +2,13 @@ import { useState } from 'react';
 import TodoTable from './TodoTable';
 
 function ToDoListWithDelete(){
-    const [todo, setTodo]=useState({
+    const [todo, setTodo]= useState ({
         description:'',
         date:''
     });
 
-    const[todos, setTodos]=useState([]);
+    const[todos, setTodos]= useState([]);
+    const[showTable, setShowTable]= useState(false);
 
     const handleClick = ()=>{
         if (todo.description === ''&& todo.date === '')
@@ -18,6 +19,7 @@ function ToDoListWithDelete(){
                 description:'',
                 date:''
             });
+            setShowTable(true);
         
     }
 
@@ -25,7 +27,8 @@ function ToDoListWithDelete(){
         const updateTodoList = todos.filter((todo, i) => i!== index);
         setTodos(updateTodoList);
 
-        //setTodos(todos.filter((todo, i)=> i!= index)); - is more simple and neat//
+        // to make codes more simple and neat no need for another constant variable defined
+        // setTodos(todos.filter((todo, i) => i!= index ));
     }
 
     return (
@@ -40,15 +43,15 @@ function ToDoListWithDelete(){
             </div>
             <div className='content'>
                 <label>Description:
-                    <input value={todo.description} onChange={e => setTodo({...todo, description:e.target.value})} />
+                    <input placeholder='description' value={todo.description} onChange={e => setTodo({...todo, description:e.target.value})} />
                 </label>
                 <label>Date:
-                    <input value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} />
+                    <input type='date' value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} />
                 </label>
                 <button onClick={handleClick}>Add</button>
             </div>
         </div>
-        <TodoTable todos={todos} handleDelete={handleDelete}/>
+        {showTable == true && <TodoTable todos={todos} handleDelete={handleDelete}/>}
 
         </>
         )
