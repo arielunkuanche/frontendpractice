@@ -7,7 +7,8 @@ function App() {
 
   return (
     <>
-      <ToDoListWithDelete />
+      {/* <ToDoListWithDelete /> */}
+      <ToDoListApp />
     </>
   )
 }
