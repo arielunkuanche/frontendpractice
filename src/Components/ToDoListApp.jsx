@@ -10,7 +10,12 @@ import { Typography } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+
+
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+
 
 function ToDoListApp(){
     const [todo, setTodo]=useState({
@@ -26,7 +31,10 @@ function ToDoListApp(){
         { field: 'description', checkboxSelection: true},
         { field: 'priority', editable: true, 
             cellStyle: params => params.value === 'High'? {color: 'Red'}: {color:'Black'}},
-        { field: 'date'},
+        { field: 'date'
+        /* valueFormatter: params => params.dayjs(value).format('DD.MM.YYYY') */},
+        /* here is the when we get the value from DataPicker then based on needs for further format */
+        /* valueFormatter: params => params.value.format('') */
     ]);
 
     const[defaultColDef, setDefaulColDef] = useState({
@@ -62,7 +70,7 @@ function ToDoListApp(){
 
     const handleDateChange =(selectedDate)=>{
         const formatedDate = selectedDate.toISOString();
-        console.log(selectedDate, formatedDate, todo);
+        {console.log(selectedDate, formatedDate, todo)};
 
         setTodo({
             ...todo,
@@ -82,13 +90,13 @@ function ToDoListApp(){
                     <TextField label='Description' value={todo.description} onChange={e => setTodo({...todo, description:e.target.value})} />
                     <TextField  label='Priority' value={todo.priority} onChange={e => setTodo({...todo, priority:e.target.value})} />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker label='Date' value={todo.date? new Date(todo.date) : null} onChange={handleDateChange}  />
+                        <DatePicker label='Date' format='DD.MM.YYYY' value={todo.date? new Date(todo.date) : null} onChange={date => handleDateChange(date)}  />
                     </LocalizationProvider>
-
+                    {/* save the whole value get from the DatePicker value={todo.value} onChange={value=>setTodo({...todo, value})} */}
                     {/* <TextField label='date' value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} /> */}
         
-                    <Button variant='contained' onClick={handleAdd}>Add</Button>
-                    <Button variant='contained' color='error' onClick={handleDelete}>Delete</Button>
+                    <Button variant='outlined' color='primary' endIcon={<AddBoxIcon />} onClick={handleAdd}>Add</Button>
+                    <Button variant='outlined' color='error' endIcon={<DeleteOutlineIcon />} onClick={handleDelete}>Delete</Button>
                 </Stack>  
             </div>
             <div className="ag-theme-material" style={{ height: 600, width: 650 }}>
