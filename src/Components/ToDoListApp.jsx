@@ -30,12 +30,11 @@ function ToDoListApp(){
     const[colDefs, setColDefs] = useState([
         { field: 'description', checkboxSelection: true},
         { field: 'priority', editable: true, 
-            cellStyle: params => params.value === 'High'? {color: 'Red'}: {color:'Black'}},
-        { field: 'date'
-        /* valueFormatter: params => params.dayjs(value).format('DD.MM.YYYY') */},
-        /* here is the when we get the value from DataPicker then based on needs for further format */
-        /* valueFormatter: params => params.value.format('') */
+            cellStyle: params => params.value === 'High'? {color: 'Red'}: {color:'Black'},},
+        { field: 'date', valueFormatter: params => params.value.format('DD.MM.YYYY')},
     ]);
+        /* valueFormatter: params => params.dayjs(value).format('DD.MM.YYYY') */
+        /* after we get the value from DataPicker, AG-Grid Column definition valueFormatter is for further value formatting */
 
     const[defaultColDef, setDefaulColDef] = useState({
         flex: 1, 
@@ -43,11 +42,11 @@ function ToDoListApp(){
         floatingFilter: true,
         filter: true, 
         sortable: true,
-        animateRows: true
     });
 
     const handleAdd = ()=>{
-        if (todo.description === ''|| todo.priority ===''|| todo.date === '')
+        // console.log(todo);
+        if (todo.description === ''|| todo.priority ==='' || todo.date === '')
             alert('Please input todo details first!')
         else
             setTodos([...todos, todo])
@@ -68,17 +67,6 @@ function ToDoListApp(){
             alert('Please select a row first!');
     }
 
-    const handleDateChange =(selectedDate)=>{
-        const formatedDate = selectedDate.toISOString();
-        {console.log(selectedDate, formatedDate, todo)};
-
-        setTodo({
-            ...todo,
-            date: formatedDate
-        });
-    }
-
-
     return (
         <>
         <div className="AddTodoContainer">
@@ -90,10 +78,11 @@ function ToDoListApp(){
                     <TextField label='Description' value={todo.description} onChange={e => setTodo({...todo, description:e.target.value})} />
                     <TextField  label='Priority' value={todo.priority} onChange={e => setTodo({...todo, priority:e.target.value})} />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label='Date' format='DD.MM.YYYY' value={todo.date? new Date(todo.date) : null} onChange={date => handleDateChange(date)}  />
+                        <DatePicker  label='Date' format='DD.MM.YYYY' value={todo.date} onChange={value => setTodo({...todo, date:value})}  />
                     </LocalizationProvider>
-                    {/* save the whole value get from the DatePicker value={todo.value} onChange={value=>setTodo({...todo, value})} */}
-                    {/* <TextField label='date' value={todo.date} onChange={e => setTodo({...todo, date:e.target.value})} /> */}
+                    {/* save the whole value get from the DatePicker value={todo.value} onChange={value=>setTodo({...todo, date:value})} 
+                        then use the column formatter to format the String*/}
+                    {/* Here the format attribute in the DatePicker define the Date to be a String  */}
         
                     <Button variant='outlined' color='primary' endIcon={<AddBoxIcon />} onClick={handleAdd}>Add</Button>
                     <Button variant='outlined' color='error' endIcon={<DeleteOutlineIcon />} onClick={handleDelete}>Delete</Button>
